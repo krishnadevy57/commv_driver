@@ -1,0 +1,26 @@
+<lint-module
+    format="1"
+    dir="/Users/drmac/.pub-cache/hosted/pub.dev/package_info_plus-4.2.0/android"
+    name=":package_info_plus"
+    type="LIBRARY"
+    maven="dev.fluttercommunity.plus.packageinfo:package_info_plus:1.0-SNAPSHOT"
+    agpVersion="8.11.1"
+    buildFolder="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/package_info_plus"
+    bootClassPath="/Users/drmac/Library/Android/sdk/platforms/android-33/android.jar:/Users/drmac/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-33"
+    neverShrinking="true">
+  <lintOptions
+      disable="InvalidPackage"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

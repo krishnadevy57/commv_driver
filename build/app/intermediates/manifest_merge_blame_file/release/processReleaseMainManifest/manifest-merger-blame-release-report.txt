@@ -1,0 +1,317 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.commv.commv"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-feature
+11-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:2:5-4:36
+12        android:name="android.hardware.camera"
+12-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:3:9-47
+13        android:required="false" />
+13-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:4:9-33
+14
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:5:5-67
+15-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:5:22-64
+16    <uses-permission android:name="android.permission.CAMERA" />
+16-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:6:5-64
+16-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:6:22-62
+17    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+17-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:7:5-8:11
+17-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:7:22-77
+18    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+18-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:9:5-10:11
+18-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:9:22-78
+19    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+19-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:11:5-78
+19-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:11:22-76
+20    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+20-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:12:5-80
+20-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:12:22-78
+21    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+21-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:13:5-75
+21-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:13:22-72
+22    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+22-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:12:5-80
+22-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:12:22-78
+23    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+23-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:13:5-75
+23-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:13:22-72
+24    <!--
+25         Required to query activities that can process text, see:
+26         https://developer.android.com/training/package-visibility and
+27         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+28
+29         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
+30    -->
+31    <queries>
+31-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:59:5-64:15
+32        <intent>
+32-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:60:9-63:18
+33            <action android:name="android.intent.action.PROCESS_TEXT" />
+33-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:61:13-72
+33-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:61:21-70
+34
+35            <data android:mimeType="text/plain" />
+35-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:62:13-50
+35-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:62:19-48
+36        </intent>
+37        <!-- Needs to be explicitly declared on Android R+ -->
+38        <package android:name="com.google.android.apps.maps" />
+38-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:33:9-64
+38-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:33:18-61
+39    </queries>
+40    <!-- Include required permissions for Google Maps API to run. -->
+41    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+41-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:23:5-79
+41-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:23:22-76
+42
+43    <uses-feature
+43-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:26:5-28:35
+44        android:glEsVersion="0x00020000"
+44-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:27:9-41
+45        android:required="true" />
+45-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:28:9-32
+46
+47    <permission
+47-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+48        android:name="com.commv.commv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+48-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+49        android:protectionLevel="signature" />
+49-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+50
+51    <uses-permission android:name="com.commv.commv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+51-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+51-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+52
+53    <application
+54        android:name="android.app.Application"
+54-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:20:9-42
+55        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+55-->[androidx.core:core:1.13.1] /Users/drmac/.gradle/caches/8.13/transforms/0f3cbb435a8bc5e1b517779769a4a9a5/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+56        android:extractNativeLibs="true"
+57        android:icon="@mipmap/ic_launcher"
+57-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:21:9-43
+58        android:label="commv" >
+58-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:19:9-30
+59        <activity
+59-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:22:9-43:20
+60            android:name="com.commv.commvdriver.MainActivity"
+60-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:23:13-41
+61            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+61-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:28:13-163
+62            android:exported="true"
+62-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:24:13-36
+63            android:hardwareAccelerated="true"
+63-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:29:13-47
+64            android:launchMode="singleTop"
+64-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:25:13-43
+65            android:taskAffinity=""
+65-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:26:13-36
+66            android:theme="@style/LaunchTheme"
+66-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:27:13-47
+67            android:windowSoftInputMode="adjustResize" >
+67-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:30:13-55
+68
+69            <!--
+70                 Specifies an Android theme to apply to this Activity as soon as
+71                 the Android process has started. This theme is visible to the user
+72                 while the Flutter UI initializes. After that, this theme continues
+73                 to determine the Window background behind the Flutter UI.
+74            -->
+75            <meta-data
+75-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:35:13-38:17
+76                android:name="io.flutter.embedding.android.NormalTheme"
+76-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:36:15-70
+77                android:resource="@style/NormalTheme" />
+77-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:37:15-52
+78
+79            <intent-filter>
+79-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:39:13-42:29
+80                <action android:name="android.intent.action.MAIN" />
+80-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:40:17-68
+80-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:40:25-66
+81
+82                <category android:name="android.intent.category.LAUNCHER" />
+82-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:41:17-76
+82-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:41:27-74
+83            </intent-filter>
+84        </activity>
+85        <!--
+86             Don't delete the meta-data below.
+87             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+88        -->
+89        <meta-data
+89-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:46:9-48:33
+90            android:name="flutterEmbedding"
+90-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:47:13-44
+91            android:value="2" />
+91-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:48:13-30
+92        <meta-data
+92-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:49:9-51:70
+93            android:name="com.google.android.geo.API_KEY"
+93-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:50:13-58
+94            android:value="AIzaSyCZS8BFO35e-deCgcJYcXtccNKstXFgQMQ" />
+94-->/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app/src/main/AndroidManifest.xml:51:13-68
+95
+96        <provider
+96-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:9:9-17:20
+97            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+97-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:10:13-82
+98            android:authorities="com.commv.commv.flutter.image_provider"
+98-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:11:13-74
+99            android:exported="false"
+99-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:12:13-37
+100            android:grantUriPermissions="true" >
+100-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:13:13-47
+101            <meta-data
+101-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:14:13-16:75
+102                android:name="android.support.FILE_PROVIDER_PATHS"
+102-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:15:17-67
+103                android:resource="@xml/flutter_image_picker_file_paths" />
+103-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:16:17-72
+104        </provider> <!-- Trigger Google Play services to install the backported photo picker module. -->
+105        <service
+105-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:19:9-31:19
+106            android:name="com.google.android.gms.metadata.ModuleDependencies"
+106-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:20:13-78
+107            android:enabled="false"
+107-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:21:13-36
+108            android:exported="false" >
+108-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:22:13-37
+109            <intent-filter>
+109-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:24:13-26:29
+110                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+110-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:25:17-94
+110-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:25:25-91
+111            </intent-filter>
+112
+113            <meta-data
+113-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:28:13-30:36
+114                android:name="photopicker_activity:0:required"
+114-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:29:17-63
+115                android:value="" />
+115-->[:image_picker_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:30:17-33
+116        </service>
+117        <service
+117-->[:geolocator_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geolocator_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:8:9-12:56
+118            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+118-->[:geolocator_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geolocator_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:9:13-77
+119            android:enabled="true"
+119-->[:geolocator_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geolocator_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:10:13-35
+120            android:exported="false"
+120-->[:geolocator_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geolocator_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:11:13-37
+121            android:foregroundServiceType="location" />
+121-->[:geolocator_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geolocator_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:12:13-53
+122
+123        <activity
+123-->[:url_launcher_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/url_launcher_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:8:9-11:74
+124            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+124-->[:url_launcher_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/url_launcher_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:9:13-74
+125            android:exported="false"
+125-->[:url_launcher_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/url_launcher_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:10:13-37
+126            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" /> <!-- Needs to be explicitly declared on P+ -->
+126-->[:url_launcher_android] /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/url_launcher_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml:11:13-71
+127        <uses-library
+127-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:39:9-41:40
+128            android:name="org.apache.http.legacy"
+128-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:40:13-50
+129            android:required="false" />
+129-->[com.google.android.gms:play-services-maps:18.2.0] /Users/drmac/.gradle/caches/8.13/transforms/d54869e9f6e678eb7bbe74b1add5a666/transformed/jetified-play-services-maps-18.2.0/AndroidManifest.xml:41:13-37
+130
+131        <activity
+131-->[com.google.android.gms:play-services-base:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/2d9fa74cbae4b87eb737bf400a12063e/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:20:9-22:45
+132            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+132-->[com.google.android.gms:play-services-base:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/2d9fa74cbae4b87eb737bf400a12063e/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:20:19-85
+133            android:exported="false"
+133-->[com.google.android.gms:play-services-base:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/2d9fa74cbae4b87eb737bf400a12063e/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:22:19-43
+134            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+134-->[com.google.android.gms:play-services-base:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/2d9fa74cbae4b87eb737bf400a12063e/transformed/jetified-play-services-base-18.3.0/AndroidManifest.xml:21:19-78
+135
+136        <meta-data
+136-->[com.google.android.gms:play-services-basement:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/6dbe54ed373552664c4f54a636cf7052/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:21:9-23:69
+137            android:name="com.google.android.gms.version"
+137-->[com.google.android.gms:play-services-basement:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/6dbe54ed373552664c4f54a636cf7052/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:22:13-58
+138            android:value="@integer/google_play_services_version" />
+138-->[com.google.android.gms:play-services-basement:18.3.0] /Users/drmac/.gradle/caches/8.13/transforms/6dbe54ed373552664c4f54a636cf7052/transformed/jetified-play-services-basement-18.3.0/AndroidManifest.xml:23:13-66
+139
+140        <uses-library
+140-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:23:9-25:40
+141            android:name="androidx.window.extensions"
+141-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:24:13-54
+142            android:required="false" />
+142-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:25:13-37
+143        <uses-library
+143-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:26:9-28:40
+144            android:name="androidx.window.sidecar"
+144-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:27:13-51
+145            android:required="false" />
+145-->[androidx.window:window:1.2.0] /Users/drmac/.gradle/caches/8.13/transforms/c422e7fc8a1ffe0d14c5f57acf8feace/transformed/jetified-window-1.2.0/AndroidManifest.xml:28:13-37
+146
+147        <provider
+147-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:24:9-32:20
+148            android:name="androidx.startup.InitializationProvider"
+148-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:25:13-67
+149            android:authorities="com.commv.commv.androidx-startup"
+149-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:26:13-68
+150            android:exported="false" >
+150-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:27:13-37
+151            <meta-data
+151-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:29:13-31:52
+152                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+152-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:30:17-78
+153                android:value="androidx.startup" />
+153-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/drmac/.gradle/caches/8.13/transforms/45e4fc20b9dd5be16ce515d95bafc076/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:31:17-49
+154            <meta-data
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+155                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+155-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+156                android:value="androidx.startup" />
+156-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+157        </provider>
+158
+159        <receiver
+159-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+160            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+160-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+161            android:directBootAware="false"
+161-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+162            android:enabled="true"
+162-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+163            android:exported="true"
+163-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+164            android:permission="android.permission.DUMP" >
+164-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+165            <intent-filter>
+165-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+166                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+166-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+166-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+167            </intent-filter>
+168            <intent-filter>
+168-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+169                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+169-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+169-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+170            </intent-filter>
+171            <intent-filter>
+171-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+172                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+172-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+172-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+173            </intent-filter>
+174            <intent-filter>
+174-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+175                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+175-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+175-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/drmac/.gradle/caches/8.13/transforms/2b67af37f1804eb0f3b86adb6b293271/transformed/jetified-profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+176            </intent-filter>
+177        </receiver>
+178    </application>
+179
+180</manifest>

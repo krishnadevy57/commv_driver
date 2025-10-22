@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/android/app"
+    name=":app"
+    type="APP"
+    maven="android:app:unspecified"
+    agpVersion="8.11.1"
+    buildFolder="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/app"
+    bootClassPath="/Users/drmac/Library/Android/sdk/platforms/android-34/android.jar:/Users/drmac/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-34">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

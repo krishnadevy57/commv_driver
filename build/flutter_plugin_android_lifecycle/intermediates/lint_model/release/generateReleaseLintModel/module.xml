@@ -1,0 +1,37 @@
+<lint-module
+    format="1"
+    dir="/Users/drmac/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.26/android"
+    name=":flutter_plugin_android_lifecycle"
+    type="LIBRARY"
+    maven="io.flutter.plugins.flutter_plugin_android_lifecycle:flutter_plugin_android_lifecycle:1.0"
+    agpVersion="8.11.1"
+    buildFolder="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/flutter_plugin_android_lifecycle"
+    bootClassPath="/Users/drmac/Library/Android/sdk/platforms/android-35/android.jar:/Users/drmac/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="11"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      disable="AndroidGradlePluginVersion,InvalidPackage,GradleDependency,NewerVersionAvailable"
+      abortOnError="true"
+      absolutePaths="true"
+      checkAllWarnings="true"
+      warningsAsErrors="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="AndroidGradlePluginVersion"
+        severity="IGNORE" />
+      <severity
+        id="GradleDependency"
+        severity="IGNORE" />
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+      <severity
+        id="NewerVersionAvailable"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

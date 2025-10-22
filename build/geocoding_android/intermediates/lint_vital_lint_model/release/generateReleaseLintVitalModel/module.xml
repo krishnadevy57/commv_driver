@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="/Users/drmac/.pub-cache/hosted/pub.dev/geocoding_android-3.3.1/android"
+    name=":geocoding_android"
+    type="LIBRARY"
+    maven="com.baseflow.geocoding:geocoding_android:1.0"
+    agpVersion="8.11.1"
+    buildFolder="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/geocoding_android"
+    bootClassPath="/Users/drmac/Library/Android/sdk/platforms/android-33/android.jar:/Users/drmac/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-33"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
