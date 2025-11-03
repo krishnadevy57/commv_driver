@@ -1,0 +1,15 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml:1:1-61
+INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml:1:1-61
+	package
+		ADDED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml:1:11-58
+		INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml
+uses-sdk
+INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml
+INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/AndroidManifest.xml

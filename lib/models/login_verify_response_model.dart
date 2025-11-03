@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final loginVerifyModel = loginVerifyModelFromJson(jsonString);
-
 import 'dart:convert';
 
 LoginVerifyModel loginVerifyModelFromJson(String str) => LoginVerifyModel.fromJson(json.decode(str));
@@ -12,14 +8,13 @@ class LoginVerifyModel {
   Driver? driver;
   String? token;
 
-  LoginVerifyModel({
-     this.driver,
-     this.token,
-  });
+  LoginVerifyModel({this.driver, this.token});
 
   factory LoginVerifyModel.fromJson(Map<String, dynamic> json) => LoginVerifyModel(
-    driver: Driver.fromJson(json["driver"]),
-    token: json.containsKey("token")?json["token"]:null,
+    driver: json.containsKey("driver") && json["driver"] != null
+        ? Driver.fromJson(json["driver"])
+        : null,
+    token: json["token"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -49,36 +44,36 @@ class Driver {
   String? vehicleColor;
   String? vehicleModel;
   String? vehicleCapacity;
-  String? documents;
-  String? location;
+  Documents? documents;
+  Location? location;
   DateTime? createdAt;
   DateTime? updatedAt;
 
   Driver({
-     this.id,
-     this.driverFirstName,
-     this.driverLastName,
-     this.driverEmail,
-     this.driverPhoneNo,
-     this.driverIdentity,
-     this.deviceId,
-     this.deviceType,
-     this.deviceToken,
-     this.isOtpVerified,
-     this.isVerifiedEmail,
-     this.isVerifiedMobile,
-     this.isProfileVerified,
-     this.isKycVerified,
-     this.driverStatus,
-     this.vehicleNumber,
-     this.vehicleType,
-     this.vehicleColor,
-     this.vehicleModel,
-     this.vehicleCapacity,
-     this.documents,
-     this.location,
-     this.createdAt,
-     this.updatedAt,
+    this.id,
+    this.driverFirstName,
+    this.driverLastName,
+    this.driverEmail,
+    this.driverPhoneNo,
+    this.driverIdentity,
+    this.deviceId,
+    this.deviceType,
+    this.deviceToken,
+    this.isOtpVerified,
+    this.isVerifiedEmail,
+    this.isVerifiedMobile,
+    this.isProfileVerified,
+    this.isKycVerified,
+    this.driverStatus,
+    this.vehicleNumber,
+    this.vehicleType,
+    this.vehicleColor,
+    this.vehicleModel,
+    this.vehicleCapacity,
+    this.documents,
+    this.location,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Driver.fromJson(Map<String, dynamic> json) => Driver(
@@ -102,10 +97,16 @@ class Driver {
     vehicleColor: json["vehicleColor"],
     vehicleModel: json["vehicleModel"],
     vehicleCapacity: json["vehicleCapacity"],
-    documents: json["documents"],
-    location: json["location"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
+    documents: json.containsKey("documents") && json["documents"] != null?Documents.fromJson(json["documents"]):null,
+    location: json.containsKey("location") && json["location"] != null
+        ? Location.fromJson(json["location"])
+        : null,
+    createdAt: json.containsKey("createdAt") && json["createdAt"] != null
+        ? DateTime.tryParse(json["createdAt"])
+        : null,
+    updatedAt: json.containsKey("updatedAt") && json["updatedAt"] != null
+        ? DateTime.tryParse(json["updatedAt"])
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -130,9 +131,90 @@ class Driver {
     "vehicleModel": vehicleModel,
     "vehicleCapacity": vehicleCapacity,
     "documents": documents,
-    "location": location,
+    "location": location?.toJson(),
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
   };
 }
 
+class Location {
+  double? lat;
+  double? lng;
+  DateTime? updatedAt;
+
+  Location({
+     this.lat,
+     this.lng,
+     this.updatedAt,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) => Location(
+    lat: json["lat"]?.toDouble(),
+    lng: json["lng"]?.toDouble(),
+    updatedAt: DateTime.parse(json["updatedAt"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "lat": lat,
+    "lng": lng,
+    "updatedAt": updatedAt?.toIso8601String(),
+  };
+}
+
+
+
+class Documents {
+  Aadhar? pan;
+  Aadhar? aadhar;
+  Aadhar? rc;
+  Aadhar? dl;
+  Aadhar? insurance;
+
+  Documents({
+     this.pan,
+     this.aadhar,
+     this.rc,
+     this.dl,
+     this.insurance,
+  });
+
+  factory Documents.fromJson(Map<String, dynamic> json) => Documents(
+    pan: Aadhar.fromJson(json["pan"]),
+    aadhar: Aadhar.fromJson(json["aadhar"]),
+    rc: Aadhar.fromJson(json["rc"]),
+    dl: Aadhar.fromJson(json["dl"]),
+    insurance: Aadhar.fromJson(json["insurance"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "pan": pan?.toJson(),
+    "aadhar": aadhar?.toJson(),
+    "rc": rc?.toJson(),
+    "dl": dl?.toJson(),
+    "insurance": insurance?.toJson(),
+  };
+}
+
+class Aadhar {
+  String? number;
+  String? photoUrl;
+  String? status;
+
+  Aadhar({
+     this.number,
+     this.photoUrl,
+     this.status,
+  });
+
+  factory Aadhar.fromJson(Map<String, dynamic> json) => Aadhar(
+    number: json["number"],
+    photoUrl: json["photoUrl"],
+    status: json["status"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "number": number,
+    "photoUrl": photoUrl,
+    "status": status,
+  };
+}

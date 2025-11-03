@@ -6,7 +6,7 @@ import '../../routes/app_routes.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
-  final AuthController authController = Get.put(AuthController());
+  final AuthController authController = AuthController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class AccountScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.check_circle, size: 16, color: Colors.green),
                       const SizedBox(width: 4),
-                      Text("Verified", style: textTheme.bodySmall?.copyWith(color: Colors.green)),
+                      Text((authController.userProfile.value.isKycVerified ?? false) ? "Verified":"Not Verified", style: textTheme.bodySmall?.copyWith(color: Colors.green)),
                     ],
                   ),
                   trailing: ElevatedButton(
@@ -100,7 +100,7 @@ class AccountScreen extends StatelessWidget {
                       backgroundColor: colorScheme.primary,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Update'),
+                    child: Text((authController.userProfile.value.isKycVerified ?? false)?'Update KYC':'Submit KYC'),
                     onPressed: () => Get.toNamed(Routes.DOCUMENT),
                   ),
                 ),

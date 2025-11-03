@@ -19,8 +19,8 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    var driver = authController.getUserProfile();
-    if(driver.driverStatus == "online"){
+     authController.getProfile();
+    if(authController.userProfile.value.driverStatus == "online"){
       isOnline.value = true;
     }else{
       isOnline.value = false;

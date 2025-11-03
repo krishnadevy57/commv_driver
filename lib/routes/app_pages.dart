@@ -1,4 +1,5 @@
 
+import 'package:commv_driver/screens/kyc_update_screen.dart';
 import 'package:get/get.dart';
 import '../bindings/initial_binding.dart';
 import '../screens/auth/login_screen.dart';
@@ -45,7 +46,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.DOCUMENT,
-      page: () => DocumentScreen(),
+      page: () => KycScreen(),
     ),
     GetPage(
       name: Routes.HOME,

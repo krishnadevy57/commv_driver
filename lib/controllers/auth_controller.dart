@@ -22,7 +22,7 @@ class AuthController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    getUserProfile();
+    checkLoginStatus();
   }
   final ApiService _userService = ApiService();
   OtpResponseModel? otpResponseModel;
@@ -98,13 +98,14 @@ class AuthController extends GetxController {
     otpError.value = null;
 
     // Replace with your actual FCM/device token retrieval logic
-    const deviceToken = 'your_device_token';
+    var deviceToken =  StorageService.instance.deviceToken;
+
 
     try {
       final response = await _userService.loginVerifyOtp(
           otp: otp,
           userphoneNo: phone,
-          deviceToken: deviceToken);
+          deviceToken: deviceToken ?? "");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -117,7 +118,7 @@ class AuthController extends GetxController {
         StorageService.instance.setLoggedIn(true);
         StorageService.instance.saveToken(otpResponse.token ?? "");
         StorageService.instance.saveUserProfile(otpResponse.driver);
-        getUserProfile();
+        getProfile();
         // You can pass the OTP to OTP screen via arguments if needed
         if ((otpResponseModel?.action ?? "") == "login") {
           Get.offAllNamed(Routes.LANDING);
@@ -186,7 +187,7 @@ class AuthController extends GetxController {
           StorageService.instance.setLoggedIn(true);
           StorageService.instance.saveToken(otpResponse.token ?? "");
           StorageService.instance.saveUserProfile(otpResponse.driver);
-          getUserProfile();
+          getProfile();
           // Get.offAllNamed(Routes.LANDING);
           return true;
         }catch(e){
@@ -232,7 +233,7 @@ class AuthController extends GetxController {
           StorageService.instance.setLoggedIn(true);
           StorageService.instance.saveToken(otpResponse.token ?? "");
           StorageService.instance.saveUserProfile(otpResponse.driver);
-          getUserProfile();
+          getProfile();
           return true;
         }catch(e){
           print(e);
@@ -273,7 +274,7 @@ class AuthController extends GetxController {
           StorageService.instance.setLoggedIn(true);
           StorageService.instance.saveToken(otpResponse.token ?? "");
           StorageService.instance.saveUserProfile(otpResponse.driver);
-          getUserProfile();
+          getProfile();
           return true;
         }catch(e){
           print(e);
@@ -296,6 +297,7 @@ class AuthController extends GetxController {
   }
 
   Future<bool> getProfile() async {
+    _getUserProfile();
 
     isLoading.value = true;
 
@@ -312,16 +314,11 @@ class AuthController extends GetxController {
           var token = storageService.token;
           otpResponse.token = token ?? "";
           otpResponse.driver?.id;
-          // Use the model fields for logic or UI
-          Get.snackbar("Success", "Successfully verified",
-              backgroundColor: Colors.green, colorText: Colors.white);
-
-          // You can pass the OTP to OTP screen via arguments if needed
 
           StorageService.instance.setLoggedIn(true);
           StorageService.instance.saveToken(otpResponse.token ?? "");
           StorageService.instance.saveUserProfile(otpResponse.driver);
-          getUserProfile();
+          _getUserProfile();
           // Get.offAllNamed(Routes.LANDING);
           return true;
         }catch(e){
@@ -331,8 +328,8 @@ class AuthController extends GetxController {
       } else {
         // otpController.value.text = "";
         final error = jsonDecode(response.body);
-        Get.snackbar("Error", error['error'] ?? "Failed to verify OTP",
-            backgroundColor: Colors.red, colorText: Colors.white);
+        // Get.snackbar("Error", error['error'] ?? "Failed to verify OTP",
+        //     backgroundColor: Colors.red, colorText: Colors.white);
       }
       return false;
     } catch (e) {
@@ -347,13 +344,13 @@ class AuthController extends GetxController {
   Future<bool> checkLoginStatus() async {
     var prefs = StorageService.instance;
     if (prefs.isLoggedIn) {
-      getUserProfile();
+      getProfile();
       return true;
     } else {
       return false;
     }
   }
-  Driver getUserProfile()  {
+  Driver _getUserProfile()  {
     var prefs = StorageService.instance;
     userProfile.value = prefs.userProfile??Driver();
     userProfile.refresh();

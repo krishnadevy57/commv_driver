@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370634426641",
+    "project_id": "commv-cae28",
+    "storage_bucket": "commv-cae28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370634426641:android:a53d54375cbbdcb90fe4b0",
+        "android_client_info": {
+          "package_name": "com.commv.commv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY57K6a7apeutEK4bAjwcKRvp3FxK1U9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
