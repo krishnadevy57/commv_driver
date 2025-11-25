@@ -1,3 +1,4 @@
+import 'package:commv_driver/controllers/auth_controller.dart';
 import 'package:commv_driver/screens/landing/earnings_screen.dart';
 import 'package:commv_driver/screens/landing/home_screen.dart';
 import 'package:commv_driver/screens/landing/wallet_screen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/home_controller.dart';
+import '../../routes/app_routes.dart';
 import 'account_screen.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -39,6 +41,10 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
+  onInitState() {
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

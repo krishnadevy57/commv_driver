@@ -20,9 +20,9 @@ io.github.zeshuaro.google_api_headers-core-runtime-2.2.0-18 /Users/drmac/.gradle
 io.github.zeshuaro.google_api_headers-lifecycle-livedata-core-2.7.0-19 /Users/drmac/.gradle/caches/8.13/transforms/ec6570d32d7a334c44d257f34d54a88c/transformed/lifecycle-livedata-core-2.7.0/res
 io.github.zeshuaro.google_api_headers-main-20 /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/main/res
 io.github.zeshuaro.google_api_headers-release-21 /Users/drmac/.pub-cache/hosted/pub.dev/google_api_headers-1.6.0/android/src/release/res
-io.github.zeshuaro.google_api_headers-pngs-22 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/google_api_headers/generated/res/pngs/release
-io.github.zeshuaro.google_api_headers-resValues-23 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/google_api_headers/generated/res/resValues/release
-io.github.zeshuaro.google_api_headers-mergeReleaseResources-24 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/google_api_headers/intermediates/incremental/release/mergeReleaseResources/merged.dir
-io.github.zeshuaro.google_api_headers-mergeReleaseResources-25 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/google_api_headers/intermediates/incremental/release/mergeReleaseResources/stripped.dir
-io.github.zeshuaro.google_api_headers-release-26 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/google_api_headers/intermediates/merged_res/release/mergeReleaseResources
-io.github.zeshuaro.google_api_headers-release-27 /Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/package_info_plus/intermediates/packaged_res/release/packageReleaseResources
+io.github.zeshuaro.google_api_headers-pngs-22 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/google_api_headers/generated/res/pngs/release
+io.github.zeshuaro.google_api_headers-resValues-23 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/google_api_headers/generated/res/resValues/release
+io.github.zeshuaro.google_api_headers-mergeReleaseResources-24 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/google_api_headers/intermediates/incremental/release/mergeReleaseResources/merged.dir
+io.github.zeshuaro.google_api_headers-mergeReleaseResources-25 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/google_api_headers/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+io.github.zeshuaro.google_api_headers-release-26 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/google_api_headers/intermediates/merged_res/release/mergeReleaseResources
+io.github.zeshuaro.google_api_headers-release-27 /Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/package_info_plus/intermediates/packaged_res/release/packageReleaseResources

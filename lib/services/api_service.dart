@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:commv_driver/controllers/auth_controller.dart';
 import 'package:commv_driver/services/storage_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -218,19 +219,33 @@ class ApiService {
   }
 
 
-  Future<http.StreamedResponse> updateKycDocuments({
-    required String rcStatus,
-    required String insuranceNumber,
-    required String panNumber,
-    required String aadharStatus,
-    required String insuranceStatus,
-    required String panStatus,
-    required String dlNumber,
-    required String rcNumber,
-    required String dlStatus,
-    required String aadharNumber,
 
-    // 👇 Optional file parameters (use File objects or null)
+  /// Fetch driver's order history with pagination.
+  /// Example: page = 1, limit = 20
+  Future<http.Response> getOrderHistory({int page = 1, int limit = 20}) async {
+    final storageService = await StorageService.instance;
+    final token = storageService.token;
+    final url = Uri.parse('$baseUrl/api/driver/order/history?page=$page&limit=$limit');
+
+    final headers = {
+      'accept': '*/*',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    return await _get(url, headers: headers);
+  }
+
+  Future<http.StreamedResponse> updateKycDocuments({
+    String? rcStatus,
+    String? insuranceNumber,
+    String? panNumber,
+    String? aadharStatus,
+    String? insuranceStatus,
+    String? panStatus,
+    String? dlNumber,
+    String? rcNumber,
+    String? dlStatus,
+    String? aadharNumber,
     File? rcFile,
     File? insuranceFile,
     File? dlFile,
@@ -243,116 +258,278 @@ class ApiService {
 
     final request = http.MultipartRequest('PATCH', url);
 
-    // ✅ Correct headers (DON’T manually set Content-Type)
     request.headers.addAll({
       'accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
 
-    // ✅ Add text fields (same as curl)
+    // TEXT FIELDS
     request.fields.addAll({
-      'rcStatus': rcStatus,
-      'insuranceNumber': insuranceNumber,
-      'panNumber': panNumber,
-      'aadharStatus': aadharStatus,
-      'insuranceStatus': insuranceStatus,
-      'panStatus': panStatus,
-      'dlNumber': dlNumber,
-      'rcNumber': rcNumber,
-      'dlStatus': dlStatus,
-      'aadharNumber': aadharNumber,
+      if (rcStatus != null) 'rcStatus': rcStatus,
+      if (insuranceNumber != null) 'insuranceNumber': insuranceNumber,
+      if (panNumber != null) 'panNumber': panNumber,
+      if (aadharStatus != null) 'aadharStatus': aadharStatus,
+      if (insuranceStatus != null) 'insuranceStatus': insuranceStatus,
+      if (panStatus != null) 'panStatus': panStatus,
+      if (dlNumber != null) 'dlNumber': dlNumber,
+      if (rcNumber != null) 'rcNumber': rcNumber,
+      if (dlStatus != null) 'dlStatus': dlStatus,
+      if (aadharNumber != null) 'aadharNumber': aadharNumber,
     });
 
-    // ✅ Attach files only if provided
-    if (rcFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'rcFile',
-        rcFile.path,
-        contentType: MediaType('image', 'png'),
-      ));
+    // FILES
+    if (rcFile != null && rcFile.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath('rcFile', rcFile.path));
     }
-    if (insuranceFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'insuranceFile',
-        insuranceFile.path,
-        contentType: MediaType('image', 'png'),
-      ));
+    if (insuranceFile != null && insuranceFile.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath('insuranceFile', insuranceFile.path));
     }
-    if (dlFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'dlFile',
-        dlFile.path,
-        contentType: MediaType('image', 'png'),
-      ));
+    if (dlFile != null && dlFile.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath('dlFile', dlFile.path));
     }
-    if (panFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'panFile',
-        panFile.path,
-        contentType: MediaType('image', 'png'),
-      ));
+    if (panFile != null && panFile.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath('panFile', panFile.path));
     }
-    if (aadharFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'aadharFile',
-        aadharFile.path,
-        contentType: MediaType('image', 'png'),
-      ));
+    if (aadharFile != null && aadharFile.path.isNotEmpty) {
+      request.files.add(await http.MultipartFile.fromPath('aadharFile', aadharFile.path));
     }
 
-    // ✅ Add empty file fields (to match curl -F 'field=')
-    final expectedFileFields = [
-      'rcFile',
-      'insuranceFile',
-      'panFile',
-      'dlFile',
-      'aadharFile',
-    ];
-
-    for (var field in expectedFileFields) {
-      final hasFile = request.files.any((f) => f.field == field);
-      if (!hasFile && !request.fields.containsKey(field)) {
-        request.fields[field] = ''; // mimic curl’s empty file key
-      }
-    }
-
-    // 🧾 Log request for debugging
-    print('----------------------------------------');
-    print('📤 REQUEST [PATCH Multipart] => ${request.url}');
-    print('🔸 Headers: ${request.headers}');
-    print('🔸 Fields: ${jsonEncode(request.fields)}');
-    print('🔸 Files: ${request.files.map((f) => f.filename).toList()}');
-    print('----------------------------------------');
-
-    // 🕓 Send with timeout
-    final streamedResponse = await request.send().timeout(
-      const Duration(seconds: 180),
-      onTimeout: () {
-        throw Exception("Request timed out. Please try again.");
-      },
-    );
-
+    final streamedResponse = await request.send();
     final respStr = await streamedResponse.stream.bytesToString();
-
-    print('----------------------------------------');
-    print('📥 RESPONSE [${streamedResponse.statusCode}]');
-    print('🔹 Body: $respStr');
-    print('----------------------------------------');
-
-    if (streamedResponse.statusCode == 401) {
-      await _handleUnauthorized();
-    }
 
     return http.StreamedResponse(
       Stream.value(utf8.encode(respStr)),
       streamedResponse.statusCode,
-      reasonPhrase: streamedResponse.reasonPhrase,
       headers: streamedResponse.headers,
+      reasonPhrase: streamedResponse.reasonPhrase,
     );
   }
 
 
 
+  Future<http.Response> getBookingDetail(int bookingId) async {
+    final url = Uri.parse('$baseUrl/api/bookings/$bookingId');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      return await _get(url, headers: headers);
+    } catch (e, st) {
+      print('Error in getBookingDetail: $e\n$st');
+      return http.Response(jsonEncode({'error': 'Failed to fetch booking detail'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
+
+
+// dart
+// Add this inside the ApiService class in `lib/services/api_service.dart`
+  Future<http.Response> orderAction({
+    required int bookingId,
+    required String action,
+    String? reason,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/driver/order/action');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      final body = jsonEncode({
+        'bookingId': bookingId,
+        'action': action,
+        'reason': reason ?? '',
+      });
+
+      return await _post(url, headers: headers, body: body);
+    } catch (e, st) {
+      print('Error in orderAction: $e\n$st');
+      return http.Response(jsonEncode({'error': 'Failed to perform order action'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
+
+
+  Future<http.Response> verifyOrder({
+    required int bookingId,
+    required String code,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/driver/order/verify');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      final body = jsonEncode({
+        'bookingId': bookingId,
+        'code': code,
+      });
+
+      return await _post(url, headers: headers, body: body);
+    } catch (e, st) {
+      print('Error in verifyOrder: $e\n$st');
+      return http.Response(jsonEncode({'error': 'Failed to verify order'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
+
+
+// dart
+  Future<http.Response> startOrder({
+    required int bookingId,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/driver/order/start');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      final body = jsonEncode({
+        'bookingId': bookingId,
+      });
+
+      return await _post(url, headers: headers, body: body);
+    } catch (e, st) {
+      if (kDebugMode) {
+        print('Error in startOrder: $e\n$st');
+      }
+      return http.Response(jsonEncode({'error': 'Failed to start order'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
+
+  Future<http.Response> completeOrder({
+    required int bookingId,
+    required num actualDistance,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/driver/order/complete');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      final body = jsonEncode({
+        'bookingId': bookingId,
+        'actualDistance': actualDistance,
+      });
+
+      return await _post(url, headers: headers, body: body);
+    } catch (e, st) {
+      if (kDebugMode) {
+        print('Error in completeOrder: $e\n$st');
+      }
+      return http.Response(jsonEncode({'error': 'Failed to complete order'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
+
+  Future<http.Response> confirmPayment({
+    required int bookingId,
+    required num amountPaid,
+    required String paymentMethod,
+    String? paymentTxnId,
+  }) async {
+    final url = Uri.parse('$baseUrl/api/driver/order/confirmPayment');
+    try {
+      final storageService = await StorageService.instance;
+      final token = await storageService.token;
+
+      if (token == null || token.toString().isEmpty) {
+        await _handleUnauthorized();
+        return http.Response(jsonEncode({'error': 'Missing token'}), 401, headers: {
+          'Content-Type': 'application/json',
+        });
+      }
+
+      final headers = {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${token.toString()}',
+      };
+
+      final body = jsonEncode({
+        'bookingId': bookingId,
+        'amountPaid': amountPaid,
+        'paymentMethod': paymentMethod,
+        'paymentTxnId': paymentTxnId ?? '',
+      });
+
+      return await _post(url, headers: headers, body: body);
+    } catch (e, st) {
+      if (kDebugMode) {
+        print('Error in confirmPayment: $e\n$st');
+      }
+      return http.Response(jsonEncode({'error': 'Failed to confirm payment'}), 500, headers: {
+        'Content-Type': 'application/json',
+      });
+    }
+  }
 }
 
 class ApiResponse {

@@ -1,11 +1,17 @@
+// lib/controllers/trip_controller.dart
+
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:commv_driver/models/order_detail_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
+import '../services/api_service.dart';
+import 'package:http/http.dart' as http;
 
 class TripController extends GetxController {
   // ---- Reactive States
@@ -15,238 +21,328 @@ class TripController extends GetxController {
 
   final isProcessingPayment = false.obs;
   final paymentStatus = 'Pending'.obs;
-  final selectedPaymentMethod = 'Cash'.obs; // Cash | UPI | Card
+  final selectedPaymentMethod = 'Cash'.obs;
 
-  // ---- Map / Route
+  // Map
   final polylines = <Polyline>{}.obs;
   final currentLocation = const LatLng(26.1800, 91.7540).obs;
 
-  // These will be set by the screen
   final pickup = Rxn<LatLng>();
   final drop = Rxn<LatLng>();
 
-  // ---- Fares / Meta
+  // Fare
   final tripId = RxString("#TRIP-${DateTime.now().millisecondsSinceEpoch}");
-  final baseFare = 49.0.obs;       // INR
-  final perKmFare = 12.0.obs;      // INR
+  final baseFare = 49.0.obs;
+  final perKmFare = 12.0.obs;
   final estimatedDistanceKm = 0.0.obs;
   final estimatedFare = 0.0.obs;
 
-  // ---- Tracking
   StreamSubscription<Position>? _posSub;
-  final String googleApiKey = "YOUR_GOOGLE_MAPS_API_KEY";
 
-  // ---- Public API ----
-  void initStops({required LatLng pickupLoc, required LatLng dropLoc}) {
-    pickup.value = pickupLoc;
-    drop.value = dropLoc;
-    _estimateFare();
+  final googleApiKey = "AIzaSyCZS8BFO35e-deCgcJYcXtccNKstXFgQMQ";
+
+  var isLoading = false.obs;
+  var errorMessage = RxnString();
+  var booking = Rxn<BookingOrder>();
+
+  late int orderId;
+
+  bool _routeInitialized = false; // avoid double routes
+
+  @override
+  void onInit() {
+    super.onInit();
+    orderId = Get.arguments?['orderId'] ?? -1;
+    fetchOrderDetails();
   }
 
-  void verifyOtp(String otp) {
-    // TODO: Replace with API call
-    if (otp.isNotEmpty && otp == "1234") {
-      isOtpVerified.value = true;
-    } else {
-      Get.snackbar("Invalid OTP", "Please check and try again");
+  // Parse Order
+  BookingOrder? _parseOrderFromResponse(Map<String, dynamic> body) {
+    final orderJson = body['order'] ?? body['booking'];
+    if (orderJson == null) return null;
+    return BookingOrder.fromJson(Map<String, dynamic>.from(orderJson));
+  }
+
+  // --------------------------------------------------------------------------
+  // FETCH ORDER DETAILS
+  // --------------------------------------------------------------------------
+  Future<void> fetchOrderDetails() async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = null;
+
+      final resp = await ApiService().getBookingDetail(orderId);
+      if (resp.statusCode == 200) {
+        final body = jsonDecode(resp.body);
+        final b = _parseOrderFromResponse(body);
+
+        if (b != null) {
+          booking.value = b;
+
+          // set pickup + drop
+          if (b.pickupLocation?.latitude != null) {
+            pickup.value = LatLng(
+              b.pickupLocation!.latitude!,
+              b.pickupLocation!.longitude!,
+            );
+          }
+
+          if (b.dropLocation?.latitude != null) {
+            drop.value = LatLng(
+              b.dropLocation!.latitude!,
+              b.dropLocation!.longitude!,
+            );
+          }
+
+          // states
+          isOtpVerified.value = b.isVerified ?? false;
+          tripStarted.value =
+          (b.startedAt != null && (b.bookingStatus == "started" || b.bookingStatus == "in_progress"));
+          tripCompleted.value = b.completedAt != null;
+
+          // ---- Route logic on load ----
+          if (!_routeInitialized) {
+            _routeInitialized = true;
+
+            if (tripStarted.value && drop.value != null) {
+              // Show DROP route after START
+              await drawRoute(currentLocation.value, drop.value!);
+            } else if (pickup.value != null) {
+              // Before START → show PICKUP
+              await drawRoute(currentLocation.value, pickup.value!);
+            }
+          }
+        }
+      } else {
+        errorMessage.value = "Failed to load";
+      }
+    } catch (e) {
+      errorMessage.value = "Error: $e";
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  Future<void> startTrip() async {
-    if (!isOtpVerified.value) {
-      Get.snackbar("Verify OTP", "Please verify OTP before starting the trip");
-      return;
-    }
-    tripStarted.value = true;
-    _startLocationStream();
-    // Draw route from current → drop (live)
-    if (drop.value != null) {
-      await drawRoute(currentLocation.value, drop.value!);
-    }
-  }
+  // --------------------------------------------------------------------------
+  // VERIFY OTP
+  // --------------------------------------------------------------------------
+  Future<void> verifyOrder(String code) async {
+    try {
+      isLoading.value = true;
 
-  Future<void> completeTrip() async {
-    if (!tripStarted.value) return;
-    tripCompleted.value = true;
-    tripStarted.value = false;
-    await _posSub?.cancel();
-    _posSub = null;
-    // Final fare recompute with last known distance (optional)
-  }
-
-  void resetTrip() {
-    isOtpVerified.value = false;
-    tripStarted.value = false;
-    tripCompleted.value = false;
-    paymentStatus.value = 'Pending';
-    polylines.clear();
-    _posSub?.cancel();
-    _posSub = null;
-    tripId.value = "#TRIP-${DateTime.now().millisecondsSinceEpoch}";
-  }
-
-  void choosePayment(String method) {
-    selectedPaymentMethod.value = method;
-  }
-
-
-  // ---- Navigation Intent (open Google Maps turn-by-turn)
-  Future<void> openGoogleNavigationToDrop() async {
-    // Handle outside (screen) with url_launcher; this is just a hook if needed
-  }
-
-  // ---- Routing
-  Future<void> drawRoute(LatLng start, LatLng end, {LatLng? via}) async {
-    final points = PolylinePoints();
-    final result = await points.getRouteBetweenCoordinates(
-      googleApiKey,
-      PointLatLng(start.latitude, start.longitude),
-      PointLatLng(end.latitude, end.longitude),
-      wayPoints: via != null
-          ? [PolylineWayPoint(location: "${via.latitude},${via.longitude}")]
-          : [],
-      travelMode: TravelMode.driving,
-    );
-
-    final coords = <LatLng>[];
-    for (final p in result.points) {
-      coords.add(LatLng(p.latitude, p.longitude));
-    }
-    polylines.clear();
-    if (coords.isNotEmpty) {
-      polylines.add(Polyline(
-        polylineId: const PolylineId('route'),
-        width: 6,
-        color: const Color(0xFF1A73E8),
-        points: coords,
-      ));
-      // quick distance estimate from polyline
-      estimatedDistanceKm.value = _measureRouteKm(coords);
-      _estimateFare();
-    }
-  }
-
-  // ---- Internal helpers
-  void _estimateFare() {
-    final p = pickup.value;
-    final d = drop.value;
-    if (p == null || d == null) return;
-
-    double km = estimatedDistanceKm.value;
-    if (km == 0) {
-      // direct haversine if route not ready
-      km = _haversineKm(p.latitude, p.longitude, d.latitude, d.longitude);
-    }
-    estimatedDistanceKm.value = km;
-    estimatedFare.value = baseFare.value + max(0, km) * perKmFare.value;
-  }
-
-  double _measureRouteKm(List<LatLng> pts) {
-    if (pts.length < 2) return 0;
-    double dist = 0;
-    for (var i = 0; i < pts.length - 1; i++) {
-      dist += _haversineKm(
-        pts[i].latitude, pts[i].longitude,
-        pts[i + 1].latitude, pts[i + 1].longitude,
+      final resp = await ApiService().verifyOrder(
+        bookingId: orderId,
+        code: code,
       );
+
+      if (resp.statusCode == 200) {
+        final updated = _parseOrderFromResponse(jsonDecode(resp.body));
+        if (updated != null) {
+          booking.value = updated;
+          isOtpVerified.value = true;
+
+          // After verify → still show route to PICKUP
+          if (pickup.value != null) {
+            await drawRoute(currentLocation.value, pickup.value!);
+          }
+        }
+      }
+    } catch (e) {
+      Get.snackbar("Error", "$e");
+    } finally {
+      isLoading.value = false;
     }
-    return dist;
   }
 
-  double _haversineKm(double lat1, double lon1, double lat2, double lon2) {
-    const R = 6371.0; // km
-    final dLat = _deg2rad(lat2 - lat1);
-    final dLon = _deg2rad(lon2 - lon1);
-    final a = sin(dLat/2)*sin(dLat/2) +
-        cos(_deg2rad(lat1))*cos(_deg2rad(lat2)) * sin(dLon/2)*sin(dLon/2);
-    final c = 2 * atan2(sqrt(a), sqrt(1-a));
-    return R * c;
+  // --------------------------------------------------------------------------
+  // START TRIP → show DROP route
+  // --------------------------------------------------------------------------
+  Future<void> startOrder() async {
+    try {
+      isLoading.value = true;
+
+      final resp = await ApiService().startOrder(bookingId: orderId);
+      final body = jsonDecode(resp.body);
+
+      if (resp.statusCode == 200) {
+        final updated = _parseOrderFromResponse(body);
+        if (updated != null) {
+          booking.value = updated;
+          tripStarted.value = true;
+
+          // Switch route to DROP
+          if (drop.value != null) {
+            await drawRoute(currentLocation.value, drop.value!);
+          }
+        }
+      }
+    } finally {
+      isLoading.value = false;
+      _startLocationStream();
+    }
   }
 
-  double _deg2rad(double deg) => deg * pi / 180.0;
+  // --------------------------------------------------------------------------
+  // COMPLETE ORDER
+  // --------------------------------------------------------------------------
+  Future<void> completeOrder() async {
+    try {
+      isLoading.value = true;
 
+      final actualDistance = booking.value?.actualDistance ?? estimatedDistanceKm.value;
+
+      final resp = await ApiService().completeOrder(
+        bookingId: orderId,
+        actualDistance: actualDistance,
+      );
+
+      if (resp.statusCode == 200) {
+        tripCompleted.value = true;
+        tripStarted.value = false;
+      }
+    } finally {
+      isLoading.value = false;
+      _posSub?.cancel();
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // LIVE LOCATION STREAM
+  // --------------------------------------------------------------------------
   Future<void> _startLocationStream() async {
-    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied) {
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      Get.snackbar("Location", "Permission required");
       return;
     }
+
     _posSub?.cancel();
-    _posSub = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 10,
-      ),
-    ).listen((pos) async {
+    _posSub = Geolocator.getPositionStream().listen((pos) async {
       currentLocation.value = LatLng(pos.latitude, pos.longitude);
-      if (tripStarted.value && drop.value != null) {
-        // Refresh leg current -> drop (lightweight; you can throttle if needed)
-        await drawRoute(currentLocation.value, drop.value!);
+
+      if (!tripStarted.value) {
+        if (pickup.value != null) {
+          await drawRoute(currentLocation.value, pickup.value!);
+        }
+      } else {
+        if (drop.value != null) {
+          await drawRoute(currentLocation.value, drop.value!);
+        }
       }
     });
   }
 
+  // --------------------------------------------------------------------------
+  // DRAW POLYLINE
+  // --------------------------------------------------------------------------
+  Future<void> drawRoute(LatLng start, LatLng end) async {
+    try {
+      final points = PolylinePoints();
+      final result = await points.getRouteBetweenCoordinates(
+        googleApiKey,
+        PointLatLng(start.latitude, start.longitude),
+        PointLatLng(end.latitude, end.longitude),
+        travelMode: TravelMode.driving,
+      );
 
-  void cancelTripDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Cancel Trip"),
-        content: Text("Are you sure you want to cancel this trip?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("No"),
-          ),
-          TextButton(
-            onPressed: () {
-              // Cancel logic here
-              Navigator.pop(context);
-            },
-            child: Text("Yes, Cancel"),
-          ),
-        ],
-      ),
+      if (result.points.isEmpty) {
+        print("❌ No points found");
+        return;
+      }
+
+      final coords = result.points
+          .map((e) => LatLng(e.latitude, e.longitude))
+          .toList();
+
+      polylines.clear(); // remove old route
+      polylines.add(
+        Polyline(
+          polylineId: const PolylineId("route"),
+          width: 6,
+          color: const Color(0xFF1A73E8),
+          points: coords,
+        ),
+      );
+    } catch (e) {
+      print("Route error → $e");
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // PAYMENT
+  // --------------------------------------------------------------------------
+  Future<void> processPaymentAction() async {
+    final amt = booking.value?.amountPaid ?? estimatedFare.value;
+    await confirmPayment(
+      amountPaid: amt,
+      paymentMethod: selectedPaymentMethod.value,
+      paymentTxnId: null,
     );
   }
 
-// Inside your StatefulWidget
-  var paymentMethod = "Cash".obs; // default
+  Future<void> confirmPayment({
+    required num amountPaid,
+    required String paymentMethod,
+    String? paymentTxnId,
+  }) async {
+    if (orderId < 0) {
+      Get.snackbar("Error", "Invalid order id");
+      return;
+    }
 
-  void setPaymentMethod(String method) {
+    try {
+      isProcessingPayment.value = true;
+      final resp = await ApiService().confirmPayment(
+        bookingId: orderId,
+        amountPaid: amountPaid,
+        paymentMethod: paymentMethod,
+        paymentTxnId: paymentTxnId,
+      );
 
-      paymentMethod.value = method;
+      final body = jsonDecode(resp.body);
 
+      if (resp.statusCode == 200) {
+        final updated = _parseOrderFromResponse(body);
+        if (updated != null) {
+          booking.value = updated;
+          paymentStatus.value = booking.value?.paymentStatus ?? 'Paid';
+        }
+        Get.snackbar("Success", body['message'] ?? "Payment confirmed");
+      } else {
+        Get.snackbar("Payment failed", body['message'] ?? 'Failed');
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to confirm payment: $e");
+    } finally {
+      isProcessingPayment.value = false;
+    }
   }
 
-  Future<void> processPayment() async {
-    if (selectedPaymentMethod.value.isEmpty) {
-      Get.snackbar("Payment", "Please select a payment method first");
-      return;
-    }
+  // Reset All
+  void resetTrip() {
+    isOtpVerified.value = false;
+    tripStarted.value = false;
+    tripCompleted.value = false;
 
-    // Case 1: Cash → immediate confirm
-    if (selectedPaymentMethod.value == "Cash") {
-      paymentStatus.value = "Paid";
-      Get.snackbar("Cash Payment", "Cash received successfully for ${tripId.value}");
-      return;
-    }
-
-    // Case 2: UPI / Card → simulate gateway
-    isProcessingPayment.value = true;
-    await Future.delayed(const Duration(seconds: 2));
     isProcessingPayment.value = false;
+    paymentStatus.value = "Pending";
+    selectedPaymentMethod.value = "Cash";
 
-    paymentStatus.value = "Paid";
-    Get.snackbar(
-      "Payment Successful",
-      "${selectedPaymentMethod.value} payment confirmed for ${tripId.value}",
-    );
+    polylines.clear();
+    estimatedDistanceKm.value = 0.0;
+    estimatedFare.value = 0.0;
+
+    pickup.value = null;
+    drop.value = null;
+
+    booking.value = null;
+    errorMessage.value = null;
+
+    _routeInitialized = false;
+
+    _posSub?.cancel();
+    _posSub = null;
   }
 
   @override

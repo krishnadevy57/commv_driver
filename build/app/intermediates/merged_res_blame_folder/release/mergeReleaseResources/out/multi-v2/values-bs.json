@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.commv.commvdriver.app-mergeReleaseResources-44:/values-bs/values-bs.xml",
+            "outputFile": "com.commv.commvdriver.app-mergeReleaseResources-48:/values-bs/values-bs.xml",
             "map": [
                 {
                     "source": "/Users/drmac/.gradle/caches/8.13/transforms/4772f80ceaadbbec8b04c030d49f0e1d/transformed/preference-1.2.1/res/values-bs/values-bs.xml",

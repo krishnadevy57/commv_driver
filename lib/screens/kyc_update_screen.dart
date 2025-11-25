@@ -1,13 +1,23 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../controllers/kyc_controller.dart';
 
-class KycScreen extends StatelessWidget {
+import '../controllers/auth_controller.dart';
+import '../controllers/kyc_controller.dart';
+import '../models/login_verify_response_model.dart';
+
+class KycScreen extends StatefulWidget {
   KycScreen({super.key});
 
+  @override
+  State<KycScreen> createState() => _KycScreenState();
+}
+
+class _KycScreenState extends State<KycScreen> {
   final KycController controller = Get.put(KycController());
+  final auth = AuthController.instance;
   final picker = ImagePicker();
 
   // Text controllers
@@ -17,7 +27,7 @@ class KycScreen extends StatelessWidget {
   final dlController = TextEditingController();
   final aadharController = TextEditingController();
 
-  // ✅ Make this observable properly at the widget level
+  // Local selected files
   final RxMap<String, File?> selectedFiles = <String, File?>{
     'RC Book': null,
     'Driving License': null,
@@ -26,18 +36,79 @@ class KycScreen extends StatelessWidget {
     'Insurance': null,
   }.obs;
 
+  // Uploaded document tick status
+  final RxMap<String, bool> uploadedStatus = <String, bool>{
+    'RC Book': false,
+    'Driving License': false,
+    'Aadhaar': false,
+    'PAN Card': false,
+    'Insurance': false,
+  }.obs;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ever(auth.userProfile, (_) => _prefillDocumentsFromProfile());
+
+    if (auth.userProfile.value.documents != null) {
+      _prefillDocumentsFromProfile();
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  void _prefillDocumentsFromProfile() {
+    final Driver user = auth.userProfile.value;
+    final docs = user.documents;
+    if (docs == null) return;
+
+    // RC
+    if (docs.rc != null) {
+      rcController.text = docs.rc!.number ?? "";
+      uploadedStatus["RC Book"] = true;
+    }
+
+    // DL
+    if (docs.dl != null) {
+      dlController.text = docs.dl!.number ?? "";
+      uploadedStatus["Driving License"] = true;
+    }
+
+    // Aadhaar
+    if (docs.aadhar != null) {
+      aadharController.text = docs.aadhar!.number ?? "";
+      uploadedStatus["Aadhaar"] = true;
+    }
+
+    // PAN
+    if (docs.pan != null) {
+      panController.text = docs.pan!.number ?? "";
+      uploadedStatus["PAN Card"] = true;
+    }
+
+    // Insurance
+    if (docs.insurance != null) {
+      insuranceController.text = docs.insurance!.number ?? "";
+      uploadedStatus["Insurance"] = true;
+    }
+
+    uploadedStatus.refresh();
+    selectedFiles.refresh();
+  }
+
+  // ------------------------------------------------------------------------
   Future<void> pickFile(String docType) async {
     final source = await Get.dialog<ImageSource>(
       AlertDialog(
-        title: const Text('Select Image Source'),
+        title: const Text("Select Image Source"),
         actions: [
           TextButton(
             onPressed: () => Get.back(result: ImageSource.camera),
-            child: const Text('Camera'),
+            child: const Text("Camera"),
           ),
           TextButton(
             onPressed: () => Get.back(result: ImageSource.gallery),
-            child: const Text('Gallery'),
+            child: const Text("Gallery"),
           ),
         ],
       ),
@@ -46,151 +117,142 @@ class KycScreen extends StatelessWidget {
     if (source != null) {
       final picked = await picker.pickImage(source: source, imageQuality: 75);
       if (picked != null) {
-        selectedFiles[docType] = File(picked.path); // ✅ now works
-        Get.snackbar('Uploaded', '$docType selected successfully');
+        selectedFiles[docType] = File(picked.path);
+        uploadedStatus[docType] = true; // show tick
+        selectedFiles.refresh();
+        uploadedStatus.refresh();
       }
     }
   }
 
-
+  // ------------------------------------------------------------------------
   void submitKyc() {
-    if (rcController.text.isEmpty ||
-        insuranceController.text.isEmpty ||
-        panController.text.isEmpty ||
-        dlController.text.isEmpty ||
-        aadharController.text.isEmpty) {
-      Get.snackbar('Missing Fields', 'Please fill all document numbers.');
-      return;
-    }
-
     controller.updateKycDocuments(
-      rcStatus: 'pending',
+      rcNumber: rcController.text,
       insuranceNumber: insuranceController.text,
       panNumber: panController.text,
-      aadharStatus: 'pending',
-      insuranceStatus: 'pending',
-      panStatus: 'pending',
       dlNumber: dlController.text,
-      rcNumber: rcController.text,
-      dlStatus: 'pending',
       aadharNumber: aadharController.text,
-      rcFile: selectedFiles['RC Book'],
-      insuranceFile: selectedFiles['Insurance'],
-      dlFile: selectedFiles['Driving License'],
-      panFile: selectedFiles['PAN Card'],
-      aadharFile: selectedFiles['Aadhaar'],
+
+      rcStatus: uploadedStatus["RC Book"]! ? "uploaded" : "pending",
+      insuranceStatus: uploadedStatus["Insurance"]! ? "uploaded" : "pending",
+      panStatus: uploadedStatus["PAN Card"]! ? "uploaded" : "pending",
+      dlStatus: uploadedStatus["Driving License"]! ? "uploaded" : "pending",
+      aadharStatus: uploadedStatus["Aadhaar"]! ? "uploaded" : "pending",
+
+      rcFile: selectedFiles["RC Book"],
+      insuranceFile: selectedFiles["Insurance"],
+      dlFile: selectedFiles["Driving License"],
+      panFile: selectedFiles["PAN Card"],
+      aadharFile: selectedFiles["Aadhaar"],
     );
   }
 
+  // ------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KYC Verification'),
+        title: const Text("KYC Verification"),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Please enter your document numbers and upload files for verification.',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
 
-            // Text fields
-            _buildInputField(rcController, 'RC Number', 'Enter RC number'),
-            _buildInputField(insuranceController, 'Insurance Number', 'Enter insurance number'),
-            _buildInputField(panController, 'PAN Number', 'Enter PAN number'),
-            _buildInputField(dlController, 'DL Number', 'Enter driving license number'),
-            _buildInputField(aadharController, 'Aadhaar Number', 'Enter Aadhaar number'),
+      body: Obx(
+            () => controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : _buildForm(context),
+      ),
+    );
+  }
 
-            const SizedBox(height: 24),
+  // ------------------------------------------------------------------------
+  Widget _buildForm(context) {
+    final theme = Theme.of(context);
 
-            Text(
-              'Upload Documents',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const Text(
+            "Enter document numbers and upload files for verification.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
 
-            // ✅ Observe selectedFiles here
-            Obx(() {
-              return Column(
-                children: selectedFiles.keys.map((doc) {
-                  final file = selectedFiles[doc];
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: file != null ? Colors.green : Colors.grey.shade400,
-                        width: 1.5,
-                      ),
+          const SizedBox(height: 20),
+
+          _buildInputField(rcController, "RC Number", "Enter RC number"),
+          _buildInputField(
+              insuranceController, "Insurance Number", "Enter insurance number"),
+          _buildInputField(panController, "PAN Number", "Enter PAN number"),
+          _buildInputField(dlController, "DL Number",
+              "Enter Driving License number"),
+          _buildInputField(
+              aadharController, "Aadhaar Number", "Enter Aadhaar number"),
+
+          const SizedBox(height: 20),
+
+          Text("Upload Documents", style: theme.textTheme.titleMedium),
+          const SizedBox(height: 10),
+
+          Obx(() {
+            return Column(
+              children: selectedFiles.keys.map((doc) {
+                final hasUploaded = uploadedStatus[doc] ?? false;
+
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    border: Border.all(
+                      color: hasUploaded ? Colors.green : Colors.grey.shade400,
+                      width: 1.5,
                     ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          file != null ? Icons.check_circle : Icons.insert_drive_file,
-                          color: file != null ? Colors.green : Colors.grey[700],
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                doc,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
-                              if (file != null)
-                                Text(
-                                  file.path.split('/').last,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: Colors.grey),
-                                ),
-                            ],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        hasUploaded ? Icons.check_circle : Icons.upload_file,
+                        color: hasUploaded ? Colors.green : Colors.grey[700],
+                      ),
+                      const SizedBox(width: 12),
+
+                      Expanded(
+                        child: Text(
+                          doc,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () => pickFile(doc),
-                          icon: const Icon(Icons.upload),
-                          label: Text(file != null ? 'Replace' : 'Upload'),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              );
-            }),
+                      ),
 
-            const SizedBox(height: 30),
+                      ElevatedButton(
+                        onPressed: () => pickFile(doc),
+                        child: Text(hasUploaded ? "Replace" : "Upload"),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );
+          }),
 
-            // Submit Button
-            Obx(() => SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: controller.isLoading.value ? null : submitKyc,
-                icon: const Icon(Icons.send),
-                label: controller.isLoading.value
-                    ? const Text('Submitting...')
-                    : const Text('Submit Documents'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  textStyle: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )),
-          ],
-        ),
+          const SizedBox(height: 25),
+
+          Obx(() => ElevatedButton(
+            onPressed: controller.isLoading.value ? null : submitKyc,
+            child: controller.isLoading.value
+                ? const Text("Submitting...")
+                : const Text("Submit"),
+          )),
+        ],
       ),
     );
   }
@@ -202,11 +264,11 @@ class KycScreen extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          labelText: label,
+          label: Text(label),
           hintText: hint,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );

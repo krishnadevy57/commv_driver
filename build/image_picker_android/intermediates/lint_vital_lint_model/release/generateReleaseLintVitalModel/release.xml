@@ -3,10 +3,10 @@
     package="io.flutter.plugins.imagepicker"
     minSdkVersion="19"
     targetSdkVersion="19"
-    mergedManifest="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml"
-    manifestMergeReport="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/outputs/logs/manifest-merger-release-report.txt"
-    proguardFiles="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/default_proguard_files/global/proguard-android.txt-8.11.1"
-    partialResultsDir="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out">
+    mergedManifest="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml"
+    manifestMergeReport="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/outputs/logs/manifest-merger-release-report.txt"
+    proguardFiles="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/intermediates/default_proguard_files/global/proguard-android.txt-8.11.1"
+    partialResultsDir="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out">
   <buildFeatures
       namespacing="REQUIRED"/>
   <sourceProviders>
@@ -21,11 +21,11 @@
   <testFixturesSourceProviders>
   </testFixturesSourceProviders>
   <artifact
-      classOutputs="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/javac/release/compileReleaseJavaWithJavac/classes:/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar"
+      classOutputs="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/intermediates/javac/release/compileReleaseJavaWithJavac/classes:/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar"
       type="MAIN"
       applicationId="io.flutter.plugins.imagepicker"
-      generatedSourceFolders="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/generated/ap_generated_sources/release/out"
-      generatedResourceFolders="/Users/drmac/Documents/HimanshuWorkSpace/commv_driver/build/image_picker_android/generated/res/resValues/release"
+      generatedSourceFolders="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/generated/ap_generated_sources/release/out"
+      generatedResourceFolders="/Users/drmac/Documents/HimanshuWorkSpace/KdGitHub/commv_driver/build/image_picker_android/generated/res/resValues/release"
       desugaredMethodsFiles="/Users/drmac/.gradle/caches/8.13/transforms/5d67371a9c1f6e865713a66fb77c504b/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

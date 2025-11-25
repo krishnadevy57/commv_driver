@@ -13,6 +13,13 @@ class DocumentController extends GetxController {
   final vehicleInfo = ''.obs;
   final driverKyc = ''.obs;
 
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+
+
+  }
   final apiService = ApiService(context: Get.context); // ✅ initialize service
 
   Future<void> pickFile(String docType) async {

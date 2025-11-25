@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,22 +21,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  // ✅ Register background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  try{
+    // ✅ Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // ✅ Register background message handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }catch(e){
+if (kDebugMode) {
+  print(e);
+}
+  }
 
   // ✅ Initialize StorageService
   final storageService = StorageService.instance;
   await storageService.init();
   Get.put(storageService);
-
+try{
   // ✅ Setup Firebase Messaging
   await _setupFirebaseMessaging();
+}catch(e){
 
+}
   runApp(CommVApp());
 }
 
