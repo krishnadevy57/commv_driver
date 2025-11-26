@@ -65,36 +65,36 @@ class _KycScreenState extends State<KycScreen> {
     // RC
     if (docs.rc != null) {
       rcController.text = docs.rc!.number ?? "";
-      uploadedStatus["RC Book"] = true;
+      uploadedStatus["RC Book"] = docs.rc!.photoUrl != null;
     }
 
     // DL
     if (docs.dl != null) {
       dlController.text = docs.dl!.number ?? "";
-      uploadedStatus["Driving License"] = true;
+      uploadedStatus["Driving License"] = docs.dl!.photoUrl != null;
     }
 
     // Aadhaar
     if (docs.aadhar != null) {
       aadharController.text = docs.aadhar!.number ?? "";
-      uploadedStatus["Aadhaar"] = true;
+      uploadedStatus["Aadhaar"] = docs.aadhar!.photoUrl != null;
     }
 
     // PAN
     if (docs.pan != null) {
       panController.text = docs.pan!.number ?? "";
-      uploadedStatus["PAN Card"] = true;
+      uploadedStatus["PAN Card"] = docs.pan!.photoUrl != null;
     }
 
     // Insurance
     if (docs.insurance != null) {
       insuranceController.text = docs.insurance!.number ?? "";
-      uploadedStatus["Insurance"] = true;
+      uploadedStatus["Insurance"] = docs.insurance!.photoUrl != null;
     }
 
     uploadedStatus.refresh();
-    selectedFiles.refresh();
   }
+
 
   // ------------------------------------------------------------------------
   Future<void> pickFile(String docType) async {

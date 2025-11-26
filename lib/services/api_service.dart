@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
 
 import '../models/address_model.dart';
 import '../models/vehicle_list_response.dart';
@@ -235,7 +236,7 @@ class ApiService {
     return await _get(url, headers: headers);
   }
 
-  Future<http.StreamedResponse> updateKycDocuments({
+  Future<http.Response> updateKycDocuments({
     String? rcStatus,
     String? insuranceNumber,
     String? panNumber,
@@ -263,47 +264,77 @@ class ApiService {
       'Authorization': 'Bearer $token',
     });
 
-    // TEXT FIELDS
-    request.fields.addAll({
-      if (rcStatus != null) 'rcStatus': rcStatus,
-      if (insuranceNumber != null) 'insuranceNumber': insuranceNumber,
-      if (panNumber != null) 'panNumber': panNumber,
-      if (aadharStatus != null) 'aadharStatus': aadharStatus,
-      if (insuranceStatus != null) 'insuranceStatus': insuranceStatus,
-      if (panStatus != null) 'panStatus': panStatus,
-      if (dlNumber != null) 'dlNumber': dlNumber,
-      if (rcNumber != null) 'rcNumber': rcNumber,
-      if (dlStatus != null) 'dlStatus': dlStatus,
-      if (aadharNumber != null) 'aadharNumber': aadharNumber,
-    });
-
-    // FILES
-    if (rcFile != null && rcFile.path.isNotEmpty) {
-      request.files.add(await http.MultipartFile.fromPath('rcFile', rcFile.path));
-    }
-    if (insuranceFile != null && insuranceFile.path.isNotEmpty) {
-      request.files.add(await http.MultipartFile.fromPath('insuranceFile', insuranceFile.path));
-    }
-    if (dlFile != null && dlFile.path.isNotEmpty) {
-      request.files.add(await http.MultipartFile.fromPath('dlFile', dlFile.path));
-    }
-    if (panFile != null && panFile.path.isNotEmpty) {
-      request.files.add(await http.MultipartFile.fromPath('panFile', panFile.path));
-    }
-    if (aadharFile != null && aadharFile.path.isNotEmpty) {
-      request.files.add(await http.MultipartFile.fromPath('aadharFile', aadharFile.path));
+    // ------------------------------
+    // 🔵 ADD TEXT FIELDS (NON-EMPTY)
+    // ------------------------------
+    void addField(String key, String? value) {
+      if (value != null && value.trim().isNotEmpty) {
+        request.fields[key] = value;
+      }
     }
 
+    addField('rcStatus', rcStatus);
+    addField('insuranceNumber', insuranceNumber);
+    addField('panNumber', panNumber);
+    addField('aadharStatus', aadharStatus);
+    addField('insuranceStatus', insuranceStatus);
+    addField('panStatus', panStatus);
+    addField('dlNumber', dlNumber);
+    addField('rcNumber', rcNumber);
+    addField('dlStatus', dlStatus);
+    addField('aadharNumber', aadharNumber);
+
+    // ---------------------------------------
+    // 🔵 ADD FILES (ONLY IF FILE IS NOT NULL)
+    // ---------------------------------------
+    Future<void> addFile(String key, File? file) async {
+      if (file != null && file.path.isNotEmpty) {
+        final mimeType = lookupMimeType(file.path) ?? 'image/jpeg';
+        final typeSplit = mimeType.split('/');
+
+        request.files.add(await http.MultipartFile.fromPath(
+          key,
+          file.path,
+          contentType: MediaType(typeSplit[0], typeSplit[1]),
+        ));
+      }
+    }
+
+    await addFile('rcFile', rcFile);
+    await addFile('insuranceFile', insuranceFile);
+    await addFile('dlFile', dlFile);
+    await addFile('panFile', panFile);
+    await addFile('aadharFile', aadharFile);
+
+    // ------------------------------
+    // 🔵 DEBUG LOGS
+    // ------------------------------
+    print("🔍 FIELDS:");
+    request.fields.forEach((k, v) => print("$k = '$v'"));
+
+    print("🔍 FILES:");
+    for (var f in request.files) {
+      print("${f.field}: ${f.filename}");
+    }
+
+    // ------------------------------
+    // 🔵 SEND REQUEST
+    // ------------------------------
     final streamedResponse = await request.send();
     final respStr = await streamedResponse.stream.bytesToString();
 
-    return http.StreamedResponse(
-      Stream.value(utf8.encode(respStr)),
+    print("🟦 Status: ${streamedResponse.statusCode}");
+    print("🟦 Response: $respStr");
+
+    return http.Response(
+      respStr,
       streamedResponse.statusCode,
       headers: streamedResponse.headers,
-      reasonPhrase: streamedResponse.reasonPhrase,
     );
   }
+
+
+
 
 
 

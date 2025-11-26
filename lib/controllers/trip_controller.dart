@@ -319,6 +319,7 @@ class TripController extends GetxController {
     }
   }
 
+
   // Reset All
   void resetTrip() {
     isOtpVerified.value = false;
