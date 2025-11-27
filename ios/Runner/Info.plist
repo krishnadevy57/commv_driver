@@ -57,5 +57,17 @@
 	</array>
 	<key>GMSApiKey</key>
     <string>AIzaSyCZS8BFO35e-deCgcJYcXtccNKstXFgQMQ</string>
+    <!-- Usage descriptions -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We use your location to provide driver services.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We use your location in background to update trip status and send realtime location to customers.</string>
+
+    <!-- Background modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+        <string>fetch</string>
+    </array>
 </dict>
 </plist>

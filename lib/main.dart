@@ -1,3 +1,5 @@
+import 'package:commv_driver/services/background_service.dart';
+import 'package:commv_driver/services/socket_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,6 +47,17 @@ try{
 }catch(e){
 
 }
+
+
+  // initialize background service (do not auto-start it; we will start when user goes online)
+  // await initializeBackgroundService();
+
+  // register socket service instance (for foreground use also)
+  // await Get.putAsync<SocketService>(() async {
+  //   final svc = SocketService();
+  //   await svc.init(); // default backgroundMode=false
+  //   return svc;
+  // });
   runApp(CommVApp());
 }
 

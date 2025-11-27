@@ -36,6 +36,10 @@ dependencies:
   flutter_svg: ^2.0.7
   firebase_core: ^3.6.0
   firebase_messaging: ^15.1.3
+  socket_io_client: ^2.0.0
+  flutter_background_service: ^5.0.1
+  flutter_background_service_android: ^6.3.1
+  get_storage: ^2.0.3
   mime:
 
 dev_dependencies:
